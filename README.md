@@ -1,13 +1,13 @@
-# webhook-replay
+# webhook-rewind
 
-[![CI](https://github.com/dkautomation23/webhook-replay/actions/workflows/ci.yml/badge.svg)](https://github.com/dkautomation23/webhook-replay/actions/workflows/ci.yml)
+[![CI](https://github.com/dkautomation23/webhook-rewind/actions/workflows/ci.yml/badge.svg)](https://github.com/dkautomation23/webhook-rewind/actions/workflows/ci.yml)
 
 Record the webhooks a provider sends you once, then replay them at your own code
 as often as you need — **re-signed, so the receiver accepts them**.
 
 ```bash
-webhook-replay capture --port 3111 --file hooks.jsonl
-webhook-replay replay --file hooks.jsonl --target http://localhost:8080/webhook \
+webhook-rewind capture --port 3111 --file hooks.jsonl
+webhook-rewind replay --file hooks.jsonl --target http://localhost:8080/webhook \
     --scheme shopify --secret "$SHOPIFY_SECRET"
 ```
 
@@ -27,7 +27,7 @@ it, and you need to send it again — which is where every obvious approach fail
 - **Turning verification off while you debug** is how a verification bug ships:
   the code path you are testing is not the code path that runs.
 
-`webhook-replay` keeps the body as bytes from the moment it arrives, and signs
+`webhook-rewind` keeps the body as bytes from the moment it arrives, and signs
 the same bytes with your own secret before sending them on. Your receiver runs
 its real verification, against a real signature, on the real payload.
 
@@ -46,7 +46,7 @@ signature. Exit code is `1` if anything came back `4xx`/`5xx`, so it works in a
 script or a CI job.
 
 ```console
-$ webhook-replay replay --file hooks.jsonl --target http://localhost:8080/webhook --scheme meta --secret s3cr3t
+$ webhook-rewind replay --file hooks.jsonl --target http://localhost:8080/webhook --scheme meta --secret s3cr3t
 
 replaying 3 event(s) to http://localhost:8080/webhook (re-signed for meta)
 
@@ -89,8 +89,8 @@ pasted into a ticket.
 ## Install
 
 ```bash
-git clone https://github.com/dkautomation23/webhook-replay.git
-cd webhook-replay
+git clone https://github.com/dkautomation23/webhook-rewind.git
+cd webhook-rewind
 npm install
 npm test          # 30 tests, no network
 npm run build
@@ -103,7 +103,7 @@ and its Node types, and neither ships in the published files.
 To receive real webhooks, put any tunnel in front of the capture port:
 
 ```bash
-webhook-replay capture --port 3111 --file hooks.jsonl
+webhook-rewind capture --port 3111 --file hooks.jsonl
 cloudflared tunnel --url http://localhost:3111      # or ngrok http 3111
 ```
 
@@ -113,7 +113,7 @@ cloudflared tunnel --url http://localhost:3111      # or ngrok http 3111
 | `--port` | capture | port to listen on (default 3111) |
 | `--status` / `--reply` | capture | what to answer with, for testing a provider's retry behaviour |
 | `--target` | replay | where to send them |
-| `--scheme` / `--secret` | replay | re-sign; `--secret` also reads `WEBHOOK_REPLAY_SECRET` |
+| `--scheme` / `--secret` | replay | re-sign; `--secret` also reads `WEBHOOK_REWIND_SECRET` |
 | `--filter` | list, replay | substring of the path, headers or body |
 | `--limit` | replay | at most N events |
 | `--keep-path` | replay | append the recorded path to the target path |

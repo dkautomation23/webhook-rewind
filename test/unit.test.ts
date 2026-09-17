@@ -10,7 +10,7 @@ import { sign, verify, type Scheme } from "../src/sign.js";
 import { headersFor, replayAll, summarise, targetUrlFor, type ReplayOptions } from "../src/replay.js";
 import { startCapture } from "../src/capture.js";
 
-const work = mkdtempSync(join(tmpdir(), "webhook-replay-"));
+const work = mkdtempSync(join(tmpdir(), "webhook-rewind-"));
 after(() => rmSync(work, { recursive: true, force: true }));
 
 function event(overrides: Partial<Event> = {}): Event {

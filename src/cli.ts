@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * webhook-replay - record webhooks once, replay them as often as you like.
+ * webhook-rewind - record webhooks once, replay them as often as you like.
  *
  * Hand-rolled argument parsing: this is a four-command CLI, and a dependency
  * that has to be audited, updated and trusted is a poor trade for the ~60 lines
@@ -12,12 +12,12 @@ import { startCapture } from "./capture.js";
 import { replayAll, summarise, type ReplayOptions } from "./replay.js";
 import { isScheme, SCHEMES, type Scheme } from "./sign.js";
 
-const USAGE = `webhook-replay - record webhooks once, replay them as often as you like.
+const USAGE = `webhook-rewind - record webhooks once, replay them as often as you like.
 
-  webhook-replay capture --port 3111 --file hooks.jsonl
-  webhook-replay list --file hooks.jsonl [--filter TEXT]
-  webhook-replay show --file hooks.jsonl --id ID
-  webhook-replay replay --file hooks.jsonl --target http://localhost:8080/webhook \\
+  webhook-rewind capture --port 3111 --file hooks.jsonl
+  webhook-rewind list --file hooks.jsonl [--filter TEXT]
+  webhook-rewind show --file hooks.jsonl --id ID
+  webhook-rewind replay --file hooks.jsonl --target http://localhost:8080/webhook \\
       [--scheme meta|github|shopify|stripe|none] [--secret S] [--filter TEXT] [--dry-run]
 
 capture
@@ -29,7 +29,7 @@ capture
 replay
   --target URL      where to send them
   --scheme NAME     re-sign for this provider: ${SCHEMES.join(", ")}
-  --secret VALUE    signing secret; or set WEBHOOK_REPLAY_SECRET
+  --secret VALUE    signing secret; or set WEBHOOK_REWIND_SECRET
   --keep-path       append the recorded path to the target path
   --filter TEXT     only events whose path, headers or body contain TEXT
   --limit N         at most N events
@@ -143,9 +143,9 @@ async function main(): Promise<number> {
     if (!isScheme(schemeName)) fail(`unknown --scheme ${schemeName}; one of ${SCHEMES.join(", ")}`);
     const scheme: Scheme = schemeName;
 
-    const secret = args.flags.get("secret") ?? process.env.WEBHOOK_REPLAY_SECRET ?? "";
+    const secret = args.flags.get("secret") ?? process.env.WEBHOOK_REWIND_SECRET ?? "";
     if (scheme !== "none" && !secret) {
-      fail(`--scheme ${scheme} needs --secret or WEBHOOK_REPLAY_SECRET`);
+      fail(`--scheme ${scheme} needs --secret or WEBHOOK_REWIND_SECRET`);
     }
 
     const needle = args.flags.get("filter") ?? "";

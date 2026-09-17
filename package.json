@@ -1,10 +1,10 @@
 {
-  "name": "webhook-replay",
+  "name": "webhook-rewind",
   "version": "0.1.0",
   "description": "Record webhooks once, replay them as often as you like - re-signed so the receiver accepts them.",
   "type": "module",
   "bin": {
-    "webhook-replay": "dist/src/cli.js"
+    "webhook-rewind": "dist/src/cli.js"
   },
   "files": [
     "dist/src"
@@ -29,7 +29,7 @@
   "author": "Dmytro Galko",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dkautomation23/webhook-replay.git"
+    "url": "git+https://github.com/dkautomation23/webhook-rewind.git"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
