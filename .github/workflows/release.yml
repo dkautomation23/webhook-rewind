@@ -1,0 +1,31 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+# Publishing the package is a separate, manual decision; this job only proves the
+# tag builds and attaches the compiled output to the release.
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: node --test "dist/test/**/*.test.js"
+      - name: Pack
+        run: npm pack --pack-destination .
+      - name: Attach the tarball to the release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "*.tgz"
+          generate_release_notes: true
