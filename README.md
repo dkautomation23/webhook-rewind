@@ -97,7 +97,7 @@ npm run build
 node dist/src/cli.js --help
 ```
 
-Node 20+. Nothing is installed at runtime — the `devDependencies` are TypeScript
+Node 22+. Nothing is installed at runtime — the `devDependencies` are TypeScript
 and its Node types, and neither ships in the published files.
 
 To receive real webhooks, put any tunnel in front of the capture port:
