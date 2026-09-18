@@ -188,10 +188,15 @@ async function main(): Promise<number> {
   fail(`unknown command ${args.command}\n\n${USAGE}`);
 }
 
+// `process.exitCode` rather than `process.exit()`: ending the process while a
+// keep-alive socket from `fetch` is still open makes libuv assert on Windows and
+// the shell sees 127 instead of the code this tool meant to return.
 main().then(
-  (code) => process.exit(code),
+  (code) => {
+    process.exitCode = code;
+  },
   (error: unknown) => {
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
-    process.exit(1);
+    process.exitCode = 1;
   },
 );
