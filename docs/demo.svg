@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="838" height="330" viewBox="0 0 838 330" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5">
+  <rect width="838" height="330" rx="8" fill="#0d1117" stroke="#30363d"/>
+  <rect width="838" height="34" rx="8" fill="#161b22"/>
+  <rect y="26" width="838" height="8" fill="#161b22"/>
+  <line x1="0" y1="34" x2="838" y2="34" stroke="#30363d"/>
+  <circle cx="18" cy="17" r="5" fill="#ff5f56"/>
+  <circle cx="36" cy="17" r="5" fill="#ffbd2e"/>
+  <circle cx="54" cy="17" r="5" fill="#27c93f"/>
+  <text x="419" y="22" fill="#8b949e" text-anchor="middle" font-size="12">webhook-rewind — replaying three captured events</text>
+  <text x="20" y="52" fill="#2dd4bf" xml:space="preserve">$ webhook-rewind replay --file hooks.jsonl --target http://localhost:8080/webhook --scheme meta</text>
+  <text x="20" y="72" fill="#c9d1d9" xml:space="preserve">  --secret $META_SECRET</text>
+  <text x="20" y="112" fill="#c9d1d9" xml:space="preserve">replaying 3 event(s) to http://localhost:8080/webhook (re-signed for meta)</text>
+  <text x="20" y="152" fill="#c9d1d9" xml:space="preserve">  200     23 ms  POST http://localhost:8080/webhook</text>
+  <text x="20" y="172" fill="#c9d1d9" xml:space="preserve">    {"object":"whatsapp_business_account","entry":[…</text>
+  <text x="20" y="192" fill="#c9d1d9" xml:space="preserve">  200      2 ms  POST http://localhost:8080/webhook</text>
+  <text x="20" y="212" fill="#c9d1d9" xml:space="preserve">    {"object":"whatsapp_business_account","entry":[…</text>
+  <text x="20" y="232" fill="#c9d1d9" xml:space="preserve">  500      1 ms  POST http://localhost:8080/webhook</text>
+  <text x="20" y="252" fill="#c9d1d9" xml:space="preserve">    {"object":"whatsapp_business_account","entry":[…</text>
+  <text x="20" y="292" fill="#c9d1d9" xml:space="preserve">2 delivered, 1 failed  (2 x 200, 1 x 500)</text>
+</svg>

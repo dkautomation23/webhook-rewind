@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/dkautomation23/webhook-rewind/actions/workflows/ci.yml/badge.svg)](https://github.com/dkautomation23/webhook-rewind/actions/workflows/ci.yml)
 
+<img src="docs/demo.svg" alt="webhook-rewind replaying three captured webhooks, re-signed" width="100%">
+
 Record the webhooks a provider sends you once, then replay them at your own code
 as often as you need — **re-signed, so the receiver accepts them**.
 
