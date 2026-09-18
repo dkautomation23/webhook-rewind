@@ -2,6 +2,24 @@
   "name": "webhook-rewind",
   "version": "0.1.0",
   "description": "Record webhooks once, replay them as often as you like - re-signed so the receiver accepts them.",
+  "keywords": [
+    "webhook",
+    "replay",
+    "hmac",
+    "debugging",
+    "integration",
+    "cli"
+  ],
+  "homepage": "https://dkautomation23.github.io/tools/webhook-rewind.html",
+  "bugs": {
+    "url": "https://github.com/dkautomation23/webhook-rewind/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dkautomation23/webhook-rewind.git"
+  },
+  "license": "MIT",
+  "author": "Dmytro Galko",
   "type": "module",
   "bin": {
     "webhook-rewind": "dist/src/cli.js"
@@ -18,21 +36,11 @@
   "scripts": {
     "build": "tsc",
     "test": "npm run build && node --test \"dist/test/**/*.test.js\"",
-    "start": "node dist/src/cli.js"
+    "start": "node dist/src/cli.js",
+    "prepublishOnly": "npm test"
   },
-  "keywords": [
-    "webhook",
-    "replay",
-    "hmac",
-    "debugging",
-    "integration",
-    "cli"
-  ],
-  "license": "MIT",
-  "author": "Dmytro Galko",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dkautomation23/webhook-rewind.git"
+  "publishConfig": {
+    "access": "public"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
