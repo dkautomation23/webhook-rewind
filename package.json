@@ -7,7 +7,10 @@
     "webhook-rewind": "dist/src/cli.js"
   },
   "files": [
-    "dist/src"
+    "dist/src/**/*.js",
+    "dist/src/**/*.d.ts",
+    "README.md",
+    "LICENSE"
   ],
   "engines": {
     "node": ">=22"

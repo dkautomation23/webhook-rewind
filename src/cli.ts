@@ -48,9 +48,15 @@ interface Args {
 function parse(argv: string[]): Args {
   const flags = new Map<string, string>();
   const bools = new Set<string>();
-  const command = argv[0] ?? "";
 
-  for (let i = 1; i < argv.length; i += 1) {
+  // `webhook-rewind --help` puts a flag where a command goes. Someone typing
+  // that wants the usage text, not a complaint about an unknown command.
+  const leading = argv[0] ?? "";
+  const isFlag = leading.startsWith("-");
+  const command = isFlag ? "" : leading;
+  if (leading === "-h") bools.add("help");
+
+  for (let i = isFlag ? 0 : 1; i < argv.length; i += 1) {
     const token = argv[i];
     if (!token.startsWith("--")) continue;
     const name = token.slice(2);
@@ -86,9 +92,11 @@ function short(body: Buffer, width = 72): string {
 async function main(): Promise<number> {
   const args = parse(process.argv.slice(2));
 
-  if (!args.command || args.command === "help" || args.bools.has("help")) {
+  // Asking for help is not a mistake; typing nothing at all is.
+  const askedForHelp = args.command === "help" || args.bools.has("help");
+  if (!args.command || askedForHelp) {
     process.stdout.write(USAGE);
-    return args.command ? 0 : 2;
+    return askedForHelp ? 0 : 2;
   }
 
   const file = args.flags.get("file") ?? "hooks.jsonl";

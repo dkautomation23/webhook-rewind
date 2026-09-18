@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
 import { mkdtempSync, rmSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { after, describe, it } from "node:test";
 
 import { append, bodyOf, forwardableHeaders, matches, read, redact, REDACTED, type Event } from "../src/store.js";
@@ -243,5 +245,29 @@ describe("capture server", () => {
     assert.equal(events[0].path, "/hooks/test?a=1");
     assert.equal(bodyOf(events[0]).toString("utf8"), '{"ping":true}');
     assert.equal(events[0].headers.authorization, REDACTED, "the token must not reach disk");
+  });
+});
+
+describe("the first thing a stranger types", () => {
+  const cli = fileURLToPath(new URL("../src/cli.js", import.meta.url));
+
+  function runCli(args: string[]): { status: number | null; out: string } {
+    const result = spawnSync(process.execPath, [cli, ...args], { encoding: "utf8" });
+    return { status: result.status, out: `${result.stdout}${result.stderr}` };
+  }
+
+  for (const flag of ["--help", "-h", "help"]) {
+    it(`answers \`${flag}\` with the usage text`, () => {
+      const { status, out } = runCli([flag]);
+      assert.equal(status, 0, `${flag} should not look like a failure`);
+      assert.doesNotMatch(out, /unknown command/, "a flag in place of a command is not an unknown command");
+      assert.match(out, /webhook-rewind - /);
+    });
+  }
+
+  it("still says so when the command really is unknown", () => {
+    const { status, out } = runCli(["frobnicate"]);
+    assert.notEqual(status, 0);
+    assert.match(out, /unknown command frobnicate/);
   });
 });
