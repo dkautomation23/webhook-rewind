@@ -1,0 +1,93 @@
+name: Bug report
+description: Something in webhook-rewind doesn't work as documented.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste a real signing secret, bearer token, or API key
+        anywhere in this form. If the bug involves one, describe it and
+        redact the value.
+
+  - type: input
+    id: version
+    attributes:
+      label: webhook-rewind version
+      description: >
+        From `npm ls -g webhook-rewind`, `npm ls webhook-rewind`, or the
+        version you ran with npx.
+      placeholder: "0.1.0"
+    validations:
+      required: true
+
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js version
+      description: Output of `node -v`. CI tests 22.x and 24.x.
+      placeholder: "v22.11.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - Linux
+        - macOS
+        - Windows
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: command
+    attributes:
+      label: Command
+      options:
+        - capture
+        - list
+        - show
+        - replay
+    validations:
+      required: true
+
+  - type: textarea
+    id: exact-command
+    attributes:
+      label: Exact command
+      description: The full command you ran. Replace --secret and WEBHOOK_REWIND_SECRET with a placeholder.
+      render: shell
+      placeholder: |
+        webhook-rewind replay --file hooks.jsonl --target http://localhost:8080/webhook --scheme shopify --secret ***
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened instead
+      description: Full console output or error message, if you can share it.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: event
+    attributes:
+      label: The relevant event
+      description: >
+        One line from the .jsonl capture file, if you can share it. Known
+        credential headers are already redacted on capture — check the rest
+        of the line before pasting it.
+    validations:
+      required: false

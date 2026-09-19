@@ -1,0 +1,27 @@
+name: Feature request
+description: Suggest something webhook-rewind should do that it doesn't today.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: What does webhook-rewind fail to capture, sign, or replay today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What you've tried instead
+      description: A workaround, another tool, or doing it by hand.
+    validations:
+      required: false
