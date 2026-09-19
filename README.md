@@ -3,6 +3,7 @@
 [![CI](https://github.com/dkautomation23/webhook-rewind/actions/workflows/ci.yml/badge.svg)](https://github.com/dkautomation23/webhook-rewind/actions/workflows/ci.yml)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/dkautomation23/webhook-rewind/badge)](https://scorecard.dev/viewer/?uri=github.com/dkautomation23/webhook-rewind)
 [![CodeQL](https://github.com/dkautomation23/webhook-rewind/actions/workflows/codeql.yml/badge.svg)](https://github.com/dkautomation23/webhook-rewind/actions/workflows/codeql.yml)
+[![npm](https://img.shields.io/npm/v/webhook-rewind)](https://www.npmjs.com/package/webhook-rewind)
 
 <img src="docs/demo.svg" alt="webhook-rewind replaying three captured webhooks, re-signed" width="100%">
 
@@ -16,6 +17,14 @@ webhook-rewind replay --file hooks.jsonl --target http://localhost:8080/webhook 
 ```
 
 No runtime dependencies. TypeScript, Node's own test runner, 35 tests.
+
+Every published version is built and published by the workflow in this
+repository, never from a laptop, and carries a provenance statement recorded in
+Sigstore's public transparency log. Anyone can check that before trusting it:
+
+```bash
+npm audit signatures
+```
 
 ## Why this exists
 
