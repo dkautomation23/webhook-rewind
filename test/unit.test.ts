@@ -271,3 +271,47 @@ describe("the first thing a stranger types", () => {
     assert.match(out, /unknown command frobnicate/);
   });
 });
+
+
+describe("a receiver that redirects", () => {
+  it("does not re-send a signed request to another host", async () => {
+    let elsewhere = 0;
+    const other = createServer((_request, response) => {
+      elsewhere += 1;
+      response.writeHead(200).end("ok");
+    });
+    await new Promise<void>((resolve) => other.listen(0, "127.0.0.1", resolve));
+    const otherPort = (other.address() as { port: number }).port;
+
+    const receiver = createServer((_request, response) => {
+      response.writeHead(302, { location: `http://127.0.0.1:${otherPort}/hook` }).end();
+    });
+    await new Promise<void>((resolve) => receiver.listen(0, "127.0.0.1", resolve));
+    const port = (receiver.address() as { port: number }).port;
+
+    try {
+      const event: Event = {
+        id: "1",
+        at: new Date().toISOString(),
+        method: "POST",
+        path: "/hook",
+        headers: { "content-type": "application/json" },
+        bodyBase64: Buffer.from('{"hello":"world"}').toString("base64"),
+      };
+      const attempts = await replayAll([event], {
+        target: `http://127.0.0.1:${port}`,
+        scheme: "none",
+        secret: "",
+        timeoutMs: 2000,
+        dryRun: false,
+        keepPath: false,
+      });
+
+      assert.equal(attempts[0]!.status, 302, "the redirect itself is the answer worth reporting");
+      assert.equal(elsewhere, 0, "the signed request must not reach a host the operator did not name");
+    } finally {
+      await new Promise<void>((resolve) => receiver.close(() => resolve()));
+      await new Promise<void>((resolve) => other.close(() => resolve()));
+    }
+  });
+});

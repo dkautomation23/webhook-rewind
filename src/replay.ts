@@ -73,6 +73,11 @@ export async function replayOne(event: Event, options: ReplayOptions): Promise<A
     const response = await fetch(url, {
       method: event.method,
       headers: headersFor(event, options),
+      // A redirect is not followed on purpose. The body carries a signature
+      // made for the host the operator named, and following a 302 would hand
+      // that signed request to a different one. A receiver that redirects gets
+      // its 3xx reported, which is the honest answer.
+      redirect: "manual",
       // As a Uint8Array view, not a Buffer: fetch takes BodyInit, and this
       // passes the same bytes through without a copy or an encoding step.
       body:
