@@ -1,6 +1,6 @@
 {
   "name": "webhook-rewind",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Record webhooks once, replay them as often as you like - re-signed so the receiver accepts them.",
   "keywords": [
     "webhook",
