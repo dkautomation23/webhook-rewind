@@ -1,6 +1,8 @@
 # webhook-rewind
 
 [![CI](https://github.com/dkautomation23/webhook-rewind/actions/workflows/ci.yml/badge.svg)](https://github.com/dkautomation23/webhook-rewind/actions/workflows/ci.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/dkautomation23/webhook-rewind/badge)](https://scorecard.dev/viewer/?uri=github.com/dkautomation23/webhook-rewind)
+[![CodeQL](https://github.com/dkautomation23/webhook-rewind/actions/workflows/codeql.yml/badge.svg)](https://github.com/dkautomation23/webhook-rewind/actions/workflows/codeql.yml)
 
 <img src="docs/demo.svg" alt="webhook-rewind replaying three captured webhooks, re-signed" width="100%">
 
@@ -13,7 +15,7 @@ webhook-rewind replay --file hooks.jsonl --target http://localhost:8080/webhook 
     --scheme shopify --secret "$SHOPIFY_SECRET"
 ```
 
-No runtime dependencies. TypeScript, Node's own test runner, 30 tests.
+No runtime dependencies. TypeScript, Node's own test runner, 35 tests.
 
 ## Why this exists
 
@@ -94,7 +96,7 @@ pasted into a ticket.
 git clone https://github.com/dkautomation23/webhook-rewind.git
 cd webhook-rewind
 npm install
-npm test          # 30 tests, no network
+npm test          # 35 tests, no network
 npm run build
 node dist/src/cli.js --help
 ```
