@@ -24,16 +24,27 @@ export function fuzz(data) {
     if (typeof answer !== "boolean") {
       throw new Error(`verify(${scheme}) answered ${typeof answer}`);
     }
-    if (scheme !== "none" && answer && text.length > 80) {
-      throw new Error(`verify(${scheme}) accepted a signature it never issued`);
+    // What matters is forgery resistance, not length. An earlier version
+    // asserted that no header over eighty bytes is ever accepted, and the
+    // README repeated it as a guarantee - but Stripe's format is a list of
+    // fields and extra ones are legitimately ignored, so a valid signature
+    // plus one extra field is 207 bytes and verifies true. The fuzzer never
+    // caught the false claim because it never produced a valid signature by
+    // chance. Flipping one byte of a real one is the property worth holding.
+    const real = sign(scheme, SECRET, body);
+    if (real !== null) {
+      const flipped = real.value.slice(0, -1) +
+        (real.value.slice(-1) === "0" ? "1" : "0");
+      if (verify(scheme, SECRET, body, flipped)) {
+        throw new Error(`verify(${scheme}) accepted a signature with a changed byte`);
+      }
+      if (!verify(scheme, SECRET, body, real.value)) {
+        throw new Error(`${scheme}: this tool signed something it cannot verify`);
+      }
     }
-    // What the tool itself signs must verify against the same secret. `none`
-    // signs nothing and says so by returning null, which is the contract.
-    const signature = sign(scheme, SECRET, body);
-    if (signature === null) {
-      if (scheme !== "none") throw new Error(`${scheme} signed nothing`);
-    } else if (!verify(scheme, SECRET, body, signature.value)) {
-      throw new Error(`${scheme}: this tool signed something it cannot verify`);
+    // `none` signs nothing and says so by returning null, which is the contract.
+    if (scheme === "none" && sign(scheme, SECRET, body) !== null) {
+      throw new Error("none must sign nothing");
     }
   }
 

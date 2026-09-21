@@ -140,10 +140,17 @@ answers are `true` and `false` — never an exception, which in a receiver turns
 a 401 into a 500, and never a `true` it did not earn.
 
 [`fuzz/parse.fuzz.js`](fuzz/parse.fuzz.js) asserts exactly that, for all five
-schemes, against arbitrary bytes: the answer is a boolean; a header longer than
-eighty bytes is never accepted; and every signature this tool produces verifies
-against the same secret, so signing and verifying can never drift apart
-silently. It also runs the on-disk readers over an event whose every field is
+schemes, against arbitrary bytes: the answer is always a boolean; a signature
+this tool produced verifies, and the same signature with **one byte changed**
+does not.
+
+An earlier version asserted instead that no header over eighty bytes is ever
+accepted, and this README repeated it as a guarantee. It was false: Stripe's
+header is a list of fields and extra ones are legitimately ignored, so a valid
+signature plus one extra field is 207 bytes and verifies `true`. The fuzzer
+never caught the wrong claim because it never produced a valid signature by
+chance — a property nothing can reach is not a property being tested. Flipping
+one byte of a real signature is reachable on every single run. It also runs the on-disk readers over an event whose every field is
 whatever a previous run happened to write.
 
 ```bash
