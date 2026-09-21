@@ -2,3 +2,9 @@ node_modules/
 dist/
 *.jsonl
 !test/**/*.jsonl
+# libFuzzer writes what it grows into the first corpus directory it is given.
+# The hand-written seeds live in fuzz/seeds/; this is its scratch space.
+crash-*
+leak-*
+timeout-*
+fuzz/corpus/

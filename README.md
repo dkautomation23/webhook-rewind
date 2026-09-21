@@ -132,6 +132,30 @@ cloudflared tunnel --url http://localhost:3111      # or ngrok http 3111
 | `--keep-path` | replay | append the recorded path to the target path |
 | `--dry-run` | replay | print what would be sent, send nothing |
 
+## Fuzzed at the one input an attacker chooses
+
+`verify` is handed a signature header by whoever sent the request. Everything
+else here is data this tool wrote; that header is not. The only acceptable
+answers are `true` and `false` — never an exception, which in a receiver turns
+a 401 into a 500, and never a `true` it did not earn.
+
+[`fuzz/parse.fuzz.js`](fuzz/parse.fuzz.js) asserts exactly that, for all five
+schemes, against arbitrary bytes: the answer is a boolean; a header longer than
+eighty bytes is never accepted; and every signature this tool produces verifies
+against the same secret, so signing and verifying can never drift apart
+silently. It also runs the on-disk readers over an event whose every field is
+whatever a previous run happened to write.
+
+```bash
+npm run build
+mkdir -p fuzz/corpus   # libFuzzer writes what it grows into the FIRST directory
+npx jazzer fuzz/parse.fuzz.js fuzz/corpus fuzz/seeds --sync -- -max_total_time=150
+```
+
+A local run on 21 September 2026: **2,000,000 executions in 123 seconds, no
+crash.** ClusterFuzzLite re-runs it on every pull request — config in
+[`.clusterfuzzlite/`](.clusterfuzzlite/).
+
 ## Honest limits
 
 - **It does not decide what a "duplicate" is.** Replaying the same event twice
